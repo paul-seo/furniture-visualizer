@@ -4,63 +4,37 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>3D Furniture Visualizer</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        html, body { width: 100%; height: 100%; }
-        body { 
-            font-family: Arial, sans-serif; 
-            background: #f0f0f0; 
-            padding: 20px; 
-            display: flex;
-            flex-direction: column;
-        }
+        body { font-family: Arial, sans-serif; margin: 0; padding: 20px; background: #f5f5f5; }
+        .container { max-width: 800px; margin: 0 auto; }
         .header { background: white; padding: 20px; border-radius: 8px; margin-bottom: 20px; }
-        .header h1 { font-size: 28px; margin-bottom: 5px; }
-        .header p { color: #666; }
+        h1 { margin: 0; font-size: 24px; }
+        p { margin: 5px 0 0 0; color: #666; }
+        .content { display: flex; gap: 20px; }
+        .preview { flex: 1; background: white; padding: 20px; border-radius: 8px; text-align: center; }
+        .controls { width: 280px; background: white; padding: 20px; border-radius: 8px; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; font-weight: bold; margin-bottom: 5px; font-size: 13px; }
+        input, select { width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px; font-size: 13px; }
+        button { width: 100%; padding: 10px; background: #2196F3; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; margin-top: 10px; }
+        button:hover { background: #1976D2; }
+        button:disabled { background: #ccc; }
+        svg { max-width: 100%; }
+        .value { font-size: 12px; color: #777; margin-top: 3px; }
+        .msg { font-size: 12px; color: #28a745; margin-top: 10px; display: none; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📐 3D Furniture Visualizer</h1>
+            <p>Transform your sketch into a 3D visualization</p>
+        </div>
         
-        .main-content { display: flex; gap: 20px; flex: 1; }
-        
-        .viewport { 
-            flex: 1;
-            background: white; 
-            padding: 30px; 
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            min-height: 400px;
-        }
-        
-        .controls { 
-            width: 320px;
-            background: white; 
-            padding: 20px; 
-            border-radius: 8px;
-            overflow-y: auto;
-            max-height: 600px;
-        }
-        
-        .control-group { margin-bottom: 18px; }
-        .control-group label { 
-            display: block; 
-            font-weight: bold; 
-            margin-bottom: 8px; 
-            font-size: 14px;
-        }
-        .control-group input, 
-        .control-group select { 
-            width: 100%; 
-            padding: 10px; 
-            border: 1px solid #ddd; 
-            border-radius: 4px;
-            font-size: 14px;
-            font-family: Arial, sans-serif;
-        }
-        .display-value { 
-            font-size: 12px; 
-            color: #777; 
-            margin-top: 4px; 
-        }
-        
-        .
+        <div class="content">
+            <div class="preview">
+                <div id="modelViewer">
+                    <svg width="300" height="300" viewBox="0 0 300 300">
+                        <defs>
+                            <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
+            
