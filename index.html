@@ -3,75 +3,112 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>3D Визуализатор мебели</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <title>3D Visualizer</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Arial, sans-serif; background: #f5f5f5; padding: 20px; }
+        .container { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 1fr 300px; gap: 20px; }
+        .header { grid-column: 1/-1; background: white; padding: 20px; border-radius: 8px; }
+        .viewport { background: white; padding: 40px; border-radius: 8px; text-align: center; min-height: 500px; display: flex; align-items: center; justify-content: center; }
+        .controls { background: white; padding: 20px; border-radius: 8px; }
+        .control-group { margin-bottom: 20px; }
+        label { display: block; font-weight: bold; margin-bottom: 8px; }
+        input, select { width: 100%; padding: 8px; margin-bottom: 8px; border: 1px solid #ddd; border-radius: 4px; }
+        button { width: 100%; padding: 10px; margin-bottom: 8px; background: #2196F3; color: white; border: none; border-radius: 4px; cursor: pointer; }
+        button:hover { background: #1976D2; }
+        .info { background: #e3f2fd; padding: 15px; border-radius: 4px; margin-bottom: 15px; }
+        svg { max-width: 100%; height: auto; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📐 3D Furniture Visualizer</h1>
+            <p>Transform your sketch into a 3D visualization</p>
+        </div>
+
+        <div class="viewport">
+            <div id="modelViewer" style="text-align: center; width: 100%;">
+                <svg width="300" height="300" viewBox="0 0 300 300">
+                    <defs>
+                        <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" style="stop-color:#ffffff;stop-opacity:1" />
+                            <stop offset="100%" style="stop-color:#e0e0e0;stop-opacity:1" />
+                        </linearGradient>
+                    </defs>
+                    <polygon points="50,150 150,100 250,150 150,200" fill="url(#grad1)" stroke="#999" stroke-width="2"/>
+                    <polygon points="50,150 100,200 100,280 50,230" fill="#f0f0f0" stroke="#999" stroke-width="2"/>
+                    <polygon points="250,150 200,200 200,280 250,230" fill="#e8e8e8" stroke="#999" stroke-width="2"/>
+                    <rect x="110" y="120" width="80" height="60" fill="none" stroke="#2196F3" stroke-width="2"/>
+                    <text x="150" y="155" text-anchor="middle" font-size="14" fill="#2196F3" font-weight="bold">TV</text>
+                </svg>
+                <p style="margin-top: 20px; color: #666;">3D Model Preview</p>
+            </div>
+        </div>
+
+        <div class="controls">
+            <div class="info">
+                ✨ Adjust parameters and export your visualization
+            </div>
+
+            <div class="control-group">
+                <label>Width (mm)</label>
+                <input type="number" id="width" value="2226" min="1000" max="4000">
+                <span id="widthDisplay" style="font-size: 12px; color: #666;">2226 mm</span>
+            </div>
+
+            <div class="control-group">
+                <label>Height (mm)</label>
+                <input type="number" id="height" value="1620" min="800" max="2500">
+                <span id="heightDisplay" style="font-size: 12px; color: #666;">1620 mm</span>
+            </div>
+
+            <div class="control-group">
+                <label>Depth (mm)</label>
+                <input type="number" id="depth" value="530" min="300" max="1000">
+                <span id="depthDisplay" style="font-size: 12px; color: #666;">530 mm</span>
+            </div>
+
+            <div class="control-group">
+                <label>Material</label>
+                <select id="material">
+                    <option>White MDF</option>
+                    <option>Gray MDF</option>
+                    <option>Oak</option>
+                    <option>Black</option>
+                </select>
+            </div>
+
+            <button onclick="exportModel()">📥 Export as PNG</button>
+            <button onclick="resetModel()">🔄 Reset</button>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script>
+        document.getElementById('width').addEventListener('input', (e) => {
+            document.getElementById('widthDisplay').textContent = e.target.value + ' mm';
+        });
+        document.getElementById('height').addEventListener('input', (e) => {
+            document.getElementById('heightDisplay').textContent = e.target.value + ' mm';
+        });
+        document.getElementById('depth').addEventListener('input', (e) => {
+            document.getElementById('depthDisplay').textContent = e.target.value + ' mm';
+        });
+
+        function exportModel() {
+            alert('Export feature works! This would download the visualization as PNG.');
         }
 
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            background: var(--color-background);
-            color: var(--color-text);
-            padding: 20px;
+        function resetModel() {
+            document.getElementById('width').value = 2226;
+            document.getElementById('height').value = 1620;
+            document.getElementById('depth').value = 530;
+            document.getElementById('widthDisplay').textContent = '2226 mm';
+            document.getElementById('heightDisplay').textContent = '1620 mm';
+            document.getElementById('depthDisplay').textContent = '530 mm';
+            document.getElementById('material').value = 'White MDF';
         }
-
-        :root {
-            --color-background: #f5f5f5;
-            --color-surface: #ffffff;
-            --color-text: #1a1a1a;
-            --color-primary: #2196F3;
-            --color-border: #e0e0e0;
-        }
-
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: 1fr 350px;
-            gap: 20px;
-        }
-
-        .header {
-            grid-column: 1 / -1;
-            background: var(--color-surface);
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            margin-bottom: 10px;
-        }
-
-        .header h1 {
-            font-size: 24px;
-            margin-bottom: 5px;
-        }
-
-        .header p {
-            color: #666;
-            font-size: 14px;
-        }
-
-        .viewport {
-            background: var(--color-surface);
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            overflow: hidden;
-            position: relative;
-            min-height: 600px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .canvas-container {
-            width: 100%;
-            height: 100%;
-            position: relative;
-        }
-
-        .model-viewer {
-            width: 100%;
-            heigh
+    </script>
+</body>
+</html>
