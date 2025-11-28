@@ -8,11 +8,7 @@
     <title>3D Furniture Visualizer</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { 
-            font-family: system-ui, -apple-system, sans-serif; 
-            padding: 20px; 
-            background: #f5f5f5;
-        }
+        body { font-family: system-ui, -apple-system, sans-serif; padding: 20px; background: #f5f5f5; }
         .container { max-width: 1000px; margin: 0 auto; }
         .header { background: white; padding: 20px; border-radius: 8px; margin-bottom: 20px; }
         h1 { font-size: 24px; margin-bottom: 5px; }
@@ -31,4 +27,143 @@
         .btn-reset { background: #888; color: white; }
         .btn-reset:hover { background: #666; }
         canvas { border: 1px solid #ddd; border-radius: 4px; }
-    <
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📐 3D Furniture Visualizer</h1>
+            <p class="subtitle">Transform your sketch into 3D visualization</p>
+        </div>
+        <div class="layout">
+            <div class="canvas-area">
+                <canvas id="canvas" width="300" height="300"></canvas>
+            </div>
+            <div class="controls">
+                <div class="control">
+                    <label>Width (mm)</label>
+                    <input type="number" id="width" value="2226" min="1000" max="4000">
+                    <div class="value" id="wv">2226 mm</div>
+                </div>
+                <div class="control">
+                    <label>Height (mm)</label>
+                    <input type="number" id="height" value="1620" min="800" max="2500">
+                    <div class="value" id="hv">1620 mm</div>
+                </div>
+                <div class="control">
+                    <label>Depth (mm)</label>
+                    <input type="number" id="depth" value="530" min="300" max="1000">
+                    <div class="value" id="dv">530 mm</div>
+                </div>
+                <div class="control">
+                    <label>Material</label>
+                    <select id="material">
+                        <option>White MDF</option>
+                        <option>Gray MDF</option>
+                        <option>Oak</option>
+                        <option>Black</option>
+                    </select>
+                </div>
+                <button class="btn-export" id="exportBtn" onclick="downloadImage()">📥 Save Image</button>
+                <button class="btn-reset" onclick="resetAll()">🔄 Reset</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        
+        function drawModel() {
+            ctx.fillStyle = '#f5f5f5';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            const grad = ctx.createLinearGradient(0, 0, 300, 300);
+            grad.addColorStop(0, '#ffffff');
+            grad.addColorStop(1, '#eeeeee');
+            ctx.fillStyle = grad;
+            ctx.beginPath();
+            ctx.moveTo(50, 150);
+            ctx.lineTo(150, 100);
+            ctx.lineTo(250, 150);
+            ctx.lineTo(150, 200);
+            ctx.closePath();
+            ctx.fill();
+            ctx.strokeStyle = '#999';
+            ctx.lineWidth = 2;
+            ctx.stroke();
+            ctx.fillStyle = '#f0f0f0';
+            ctx.beginPath();
+            ctx.moveTo(50, 150);
+            ctx.lineTo(100, 200);
+            ctx.lineTo(100, 280);
+            ctx.lineTo(50, 230);
+            ctx.closePath();
+            ctx.fill();
+            ctx.stroke();
+            ctx.fillStyle = '#e8e8e8';
+            ctx.beginPath();
+            ctx.moveTo(250, 150);
+            ctx.lineTo(200, 200);
+            ctx.lineTo(200, 280);
+            ctx.lineTo(250, 230);
+            ctx.closePath();
+            ctx.fill();
+            ctx.stroke();
+            ctx.strokeStyle = '#2196F3';
+            ctx.lineWidth = 2;
+            ctx.setLineDash([3, 3]);
+            ctx.strokeRect(110, 120, 80, 60);
+            ctx.setLineDash([]);
+            ctx.fillStyle = '#2196F3';
+            ctx.font = 'bold 12px sans-serif';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText('TV', 150, 155);
+        }
+        
+        document.getElementById('width').addEventListener('input', (e) => {
+            document.getElementById('wv').textContent = e.target.value + ' mm';
+            drawModel();
+        });
+        document.getElementById('height').addEventListener('input', (e) => {
+            document.getElementById('hv').textContent = e.target.value + ' mm';
+            drawModel();
+        });
+        document.getElementById('depth').addEventListener('input', (e) => {
+            document.getElementById('dv').textContent = e.target.value + ' mm';
+            drawModel();
+        });
+        
+        function downloadImage() {
+            const btn = document.getElementById('exportBtn');
+            btn.disabled = true;
+            btn.textContent = '⏳ Processing...';
+            setTimeout(() => {
+                const link = document.createElement('a');
+                const w = document.getElementById('width').value;
+                const h = document.getElementById('height').value;
+                const m = document.getElementById('material').value;
+                const d = new Date().toISOString().slice(0, 10);
+                link.href = canvas.toDataURL('image/png');
+                link.download = 'furniture_' + w + 'x' + h + '_' + m + '_' + d + '.png';
+                link.click();
+                btn.disabled = false;
+                btn.textContent = '📥 Save Image';
+            }, 100);
+        }
+        
+        function resetAll() {
+            document.getElementById('width').value = 2226;
+            document.getElementById('height').value = 1620;
+            document.getElementById('depth').value = 530;
+            document.getElementById('wv').textContent = '2226 mm';
+            document.getElementById('hv').textContent = '1620 mm';
+            document.getElementById('dv').textContent = '530 mm';
+            document.getElementById('material').value = 'White MDF';
+            drawModel();
+        }
+        
+        drawModel();
+    </script>
+</body>
+</html>
